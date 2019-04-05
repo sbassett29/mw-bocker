@@ -1,6 +1,6 @@
 # mw-bocker
 
-Some bash scripts to get a super-lean [mediawiki](https://www.mediawiki.org/) installed and running via (PHP's built-in web server](https://www.php.net/manual/en/features.commandline.webserver.php).
+Some bash scripts to get a super-lean [mediawiki](https://www.mediawiki.org/) installed and running via [PHP's built-in web server](https://www.php.net/manual/en/features.commandline.webserver.php).
 
 Why?  The available [Vagrant](https://github.com/wikimedia/mediawiki-vagrant) and [Docker](https://github.com/wikimedia/mediawiki-docker) images for mediawiki are full-featured, but bloated and slow.  This set of scripts is designed to get you up and running with a [desired version of mediawiki](https://releases.wikimedia.org/mediawiki/) with a lean, opinionated configuration for quick testing.
 
@@ -8,7 +8,7 @@ Why?  The available [Vagrant](https://github.com/wikimedia/mediawiki-vagrant) an
 
 ```
 bash
-php5.4+
+php5.4+ (preferably 7+)
 some other, standard cli stuff
 ```
 
@@ -22,11 +22,12 @@ some other, standard cli stuff
 2. Then, run ```build.sh``` to install and configure mediawiki.
 3. Finally, use the ```start.sh``` and ```stop.sh``` scripts to start and stop PHP's built-in web server.
 
-## The Future
+## TODO
 
-1. Support for commmon/deployed skins and extensions
-2. Support for services (eh, maybe not)
-3. Support for TLS, though this isn't too bad to set up via a Docker LAMP and PHP's internal web server does not support this.
+1. Support for commmon/deployed skins and extensions.
+2. Support for quick pulls of gerrit patchsets.
+3. Support for services (eh, maybe not).
+4. Support for TLS, though this isn't too bad to set up via a Docker LAMP and PHP's internal web server does not support this.
 
 ## Authors
 
