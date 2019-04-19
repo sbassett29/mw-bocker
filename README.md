@@ -18,7 +18,7 @@ some other, standard cli stuff
 
 ## Usage
 
-1. First, configure ```env.sh``` to your liking and source it.
+1. First, configure ```.env``` to your liking and source it.
 2. Then, run ```build.sh``` to install and configure mediawiki.
 3. Finally, use the ```start.sh``` and ```stop.sh``` scripts to start and stop PHP's built-in web server.
 
