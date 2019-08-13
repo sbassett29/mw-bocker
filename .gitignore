@@ -1,0 +1,7 @@
+data/
+mediawiki/
+modules/
+.DS_Store
+.gitignore
+NOTES
+args.sh

@@ -19,6 +19,7 @@
 #     BOCKER_MW_ADMIN_PW  = mw admin password
 #     BOCKER_MW_DB        = database type (sqlite)
 #     BOCKER_MW_DB_DIR    = database data directory ($PWD/data)
+#     BOCKER_MW_NPM       = run npm i post install
 #   (with set -u, script will exit if the above are not defined)
 ################################################################################
 set -euo pipefail
@@ -52,15 +53,20 @@ fi
 
 # assume now in mw install dir, we should be
 # composer && npm installs
-composer install --no-plugins --no-scripts --no-suggest \
-&& npm install --no-optional --no-shrinkwrap --no-bin-links --ignore-scripts
+composer clearcache && composer update --no-plugins --no-scripts --no-suggest
+
+if [[ "$BOCKER_MW_NPM" = "true" ]]; then
+	npm install --no-optional --no-shrinkwrap --no-bin-links --ignore-scripts
+fi
 
 # install and configure skins/exts/services/etc.
-# vector skin
-cd skins \
-&& git clone https://gerrit.wikimedia.org/r/mediawiki/skins/Vector \
-&& git checkout $BOCKER_MW_VER \
-&& cd ..
+# vector skin - only for git repos (not tarballs)
+if [[ "$BOCKER_MW_VER" = "master" ]]; then
+	cd skins \
+	&& git submodule add -f https://gerrit.wikimedia.org/r/mediawiki/skins/Vector \
+	&& git checkout $BOCKER_MW_VER \
+	&& cd ..
+fi
 
 # configure mediawiki
 if [[ -d "$BOCKER_MW_DB_DIR" ]]; then
