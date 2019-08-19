@@ -24,6 +24,9 @@
 ################################################################################
 set -euo pipefail
 
+# source .env
+. .env
+
 # check binary dependencies
 bins=("$BOCKER_PHP" "git" "curl" "tar" "printf" "composer" \
 		"npm" "kill" "pgrep")
@@ -39,7 +42,7 @@ if [[ "$BOCKER_MW_VER" = "master" ]]; then
 	if [[ -d "$BOCKER_MW_DIR" ]]; then
 		rm -rf $BOCKER_MW_DIR
 	fi
-	git clone --depth 1 -b $BOCKER_MW_VER $BOCKER_MW_REPO_URL $BOCKER_MW_DIR \
+	git clone $BOCKER_MW_GIT_DEPTH -b $BOCKER_MW_VER $BOCKER_MW_REPO_URL $BOCKER_MW_DIR \
 	&& cd $BOCKER_MW_DIR
 else
 	bocker_mw_maj_ver=${BOCKER_MW_VER%*.*}
@@ -69,25 +72,35 @@ if [[ "$BOCKER_MW_VER" = "master" ]]; then
 fi
 
 # configure mediawiki
-if [[ -d "$BOCKER_MW_DB_DIR" ]]; then
-	rm -rf $BOCKER_MW_DB_DIR
+if [[ "$BOCKER_MW_KEEP_EXISTING_DB" != "true" ]]; then
+	if [[ -d "$BOCKER_MW_DB_DIR" ]]; then
+		rm -rf $BOCKER_MW_DB_DIR
+	fi
+
+	mkdir $BOCKER_MW_DB_DIR
+	admin_user="$BOCKER_MW_ADMIN"
+	admin_password="$BOCKER_MW_ADMIN_PW"
+	db="$BOCKER_MW_DB"
+	$BOCKER_PHP maintenance/install.php \
+		--scriptpath="" \
+		--dbtype="$BOCKER_MW_DB" \
+		--dbpath="$BOCKER_MW_DB_DIR" \
+		--dbname="$BOCKER_MW_SERVER" \
+		--dbserver="localhost" \
+		--lang="en" \
+		--pass="$BOCKER_MW_ADMIN_PW" "Test Mediawiki" "$BOCKER_MW_ADMIN" --
+
+	echo ""
+	echo "Mediawiki installed!"
+	echo "Admin username: $BOCKER_MW_ADMIN"
+	echo "Admin password: $BOCKER_MW_ADMIN_PW"
+	echo "Database: $BOCKER_MW_DB"
+else
+	if [[ -d "$BOCKER_MW_DB_DIR" ]]; then
+		mw_db_dir_status="exists."
+	else
+		mw_db_dir_status="DOES NOT exist."
+	fi
+	echo "$BOCKER_MW_KEEP_EXISTING_DB == 'true' and $BOCKER_MW_DB_DIR directory $mw_db_dir_status"
+	echo "NOTE: You will need to create or copy a LocalSettings.php file into your new installation directory."
 fi
-mkdir $BOCKER_MW_DB_DIR
-
-admin_user="$BOCKER_MW_ADMIN"
-admin_password="$BOCKER_MW_ADMIN_PW"
-db="$BOCKER_MW_DB"
-$BOCKER_PHP maintenance/install.php \
---scriptpath="" \
---dbtype="$BOCKER_MW_DB" \
---dbpath="$BOCKER_MW_DB_DIR" \
---dbname="$BOCKER_MW_SERVER" \
---dbserver="localhost" \
---lang="en" \
---pass="$BOCKER_MW_ADMIN_PW" "Test Mediawiki" "$BOCKER_MW_ADMIN" --
-
-echo ""
-echo "Mediawiki installed!"
-echo "Admin username: $BOCKER_MW_ADMIN"
-echo "Admin password: $BOCKER_MW_ADMIN_PW"
-echo "Database: $BOCKER_MW_DB"

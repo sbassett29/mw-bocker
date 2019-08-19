@@ -13,6 +13,9 @@
 ################################################################################
 set -euo pipefail
 
+# source .env
+. .env
+
 # check binary dependencies
 bins=("$BOCKER_PHP" "kill" "pgrep")
 for bin in "${bins[@]}"; do
