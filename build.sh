@@ -38,7 +38,7 @@ for bin in "${bins[@]}"; do
 done
 
 # get and unpack mediawiki core - always a fresh install, for now
-if [[ "$BOCKER_MW_VER" = "master" ]]; then
+if [[ "$BOCKER_MW_VER" = "master" ]] || [[ "$BOCKER_MW_VER" == "REL"* ]]; then
 	if [[ -d "$BOCKER_MW_DIR" ]]; then
 		rm -rf $BOCKER_MW_DIR
 	fi
@@ -101,6 +101,6 @@ else
 	else
 		mw_db_dir_status="DOES NOT exist."
 	fi
-	echo "$BOCKER_MW_KEEP_EXISTING_DB == 'true' and $BOCKER_MW_DB_DIR directory $mw_db_dir_status"
+	echo "BOCKER_MW_KEEP_EXISTING_DB == 'true' and BOCKER_MW_DB_DIR directory $mw_db_dir_status"
 	echo "NOTE: You will need to create or copy a LocalSettings.php file into your new installation directory."
 fi

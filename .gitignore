@@ -1,7 +1,7 @@
 data/
 mediawiki/
 modules/
+.env
 .DS_Store
-.gitignore
 NOTES
 args.sh
